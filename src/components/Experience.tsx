@@ -60,15 +60,13 @@ export const Experience: React.FC = () => {
                       </button>
                     )}
                   </div>
-                  <div className="experience-pillars-grid" role="tablist" aria-label="Filter career journey stages">
+                  <div className="experience-pillars-grid" role="group" aria-label="Filter career journey stages">
                     {entry.keyPillars.map((pillar, idx) => {
                       const isActive = selectedStageIndex === idx;
                       return (
                         <button
                           key={pillar}
                           type="button"
-                          role="tab"
-                          aria-selected={isActive}
                           className={`experience-pillar-item experience-pillar-item--btn ${
                             isActive ? 'experience-pillar-item--active' : ''
                           }`}
@@ -152,6 +150,3 @@ export const Experience: React.FC = () => {
 };
 
 export default Experience;
-
-
-

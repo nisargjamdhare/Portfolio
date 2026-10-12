@@ -52,15 +52,13 @@ export const Projects: React.FC = () => {
 
         {/* Status Transparency & Filter Bar */}
         <div className="projects-toolbar">
-          <div className="projects-filter-group" role="tablist" aria-label="Filter projects by engineering domain">
+          <div className="projects-filter-group" role="group" aria-label="Filter projects by engineering domain">
             {CATEGORY_FILTERS.map((category) => {
               const isSelected = activeFilter === category;
               return (
                 <button
                   key={category}
                   type="button"
-                  role="tab"
-                  aria-selected={isSelected}
                   className={`filter-pill-btn ${isSelected ? 'filter-pill-btn--active' : ''}`}
                   onClick={() => setActiveFilter(category)}
                 >
@@ -104,4 +102,3 @@ export const Projects: React.FC = () => {
 };
 
 export default Projects;
-

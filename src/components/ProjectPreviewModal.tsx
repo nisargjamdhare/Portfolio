@@ -136,12 +136,12 @@ export const ProjectPreviewModal: React.FC<ProjectPreviewModalProps> = ({ projec
                 {project.description}
               </p>
 
-              <h3 className="modal-section-heading" style={{ marginTop: '20px' }}>
+              <h3 className="modal-section-heading modal-section-heading--spaced">
                 Architectural Blueprint
               </h3>
               <p className="modal-body-text">{project.architectureSummary}</p>
 
-              <h3 className="modal-section-heading" style={{ marginTop: '20px' }}>
+              <h3 className="modal-section-heading modal-section-heading--spaced">
                 Proposed Technology Stack
               </h3>
               <div className="project-tech-stack">
@@ -207,4 +207,3 @@ export const ProjectPreviewModal: React.FC<ProjectPreviewModalProps> = ({ projec
 };
 
 export default ProjectPreviewModal;
-

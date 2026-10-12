@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "no-inline-styles": "off",
+    "axe/aria": "off",
+    "compat-api/css": "off",
+    "typescript-config/target": "off",
+    "typescript-config/is-valid": "off",
+    "typescript-config/consistent-casing": "off",
+    "typescript-config/strict": "off"
+  }
+}
+

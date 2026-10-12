@@ -164,7 +164,6 @@ export const Banner: React.FC = () => {
                     type="button"
                     className={`arch-layer arch-layer--interactive ${isSelected ? 'arch-layer--active' : ''}`}
                     onClick={() => setActiveLayerId(layer.id)}
-                    aria-pressed={isSelected}
                   >
                     <div className="arch-layer__label">
                       <span className={`layer-tag layer-tag--${layer.tagColor}`}>{layer.code}</span>
@@ -192,11 +191,11 @@ export const Banner: React.FC = () => {
                 <div className="arch-flow-nodes">
                   <div className="arch-flow-node">{activeLayer.flowSteps[0]}</div>
                   <svg className="arch-flow-arrow" width="28" height="14" viewBox="0 0 28 14" fill="none" aria-hidden="true">
-                    <path d="M2 7h22m-4-4 4 4-4 4" stroke="#67e8f9" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M2 7h22m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <div className="arch-flow-node arch-flow-node--highlight">{activeLayer.flowSteps[1]}</div>
                   <svg className="arch-flow-arrow" width="28" height="14" viewBox="0 0 28 14" fill="none" aria-hidden="true">
-                    <path d="M2 7h22m-4-4 4 4-4 4" stroke="#a78bfa" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M2 7h22m-4-4 4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <div className="arch-flow-node">{activeLayer.flowSteps[2]}</div>
                 </div>
@@ -210,5 +209,3 @@ export const Banner: React.FC = () => {
 };
 
 export default Banner;
-
-

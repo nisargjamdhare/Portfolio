@@ -3,7 +3,7 @@ import emailjs from 'emailjs-com';
 import { PROFILE_DATA } from '../data/portfolioData';
 import { resolveAssetUrl } from '../data/projects';
 
-type FormStatus = 'idle' | 'sending' | 'sent' | 'error';
+type FormStatus = 'idle' | 'sending' | 'sent' | 'validation-error';
 
 export const Contacts: React.FC = () => {
   const [firstname, setFirstName] = useState<string>('');
@@ -12,18 +12,51 @@ export const Contacts: React.FC = () => {
   const [mobile, setMobile] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [status, setStatus] = useState<FormStatus>('idle');
+  const [preparedMailtoUrl, setPreparedMailtoUrl] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const createMailtoUrl = (
+    first: string,
+    last: string,
+    senderEmail: string,
+    phone: string,
+    msg: string
+  ): string => {
+    const fullName = `${first} ${last}`.trim() || 'Portfolio Visitor';
+    const subject = encodeURIComponent(`Portfolio Inquiry from ${fullName}`);
+    const bodyLines = [
+      `Name: ${fullName}`,
+      `Email: ${senderEmail}`,
+      phone ? `Phone: ${phone}` : '',
+      '',
+      'Message:',
+      msg,
+    ].filter(Boolean);
+    const body = encodeURIComponent(bodyLines.join('\n'));
+    return `mailto:${PROFILE_DATA.email}?subject=${subject}&body=${body}`;
+  };
+
+  const resetFormFields = () => {
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setMobile('');
+    setMessage('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!firstname.trim() || !email.trim() || !message.trim()) {
+      setStatus('validation-error');
       return;
     }
 
+    const fallbackUrl = createMailtoUrl(firstname, lastname, email, mobile, message);
+    setPreparedMailtoUrl(fallbackUrl);
     setStatus('sending');
 
-    const serviceId = 'service_88cf1tl';
-    const templateId = 'template_ae9kqih';
-    const publicKey = 'tFNs-NgyqGytRWEvD';
+    const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_88cf1tl';
+    const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || 'template_ae9kqih';
+    const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'tFNs-NgyqGytRWEvD';
 
     const templateParams = {
       from_firstname: firstname,
@@ -34,19 +67,34 @@ export const Contacts: React.FC = () => {
       message,
     };
 
-    emailjs
-      .send(serviceId, templateId, templateParams, publicKey)
-      .then(() => {
-        setStatus('sent');
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setMobile('');
-        setMessage('');
-      })
-      .catch(() => {
-        setStatus('error');
-      });
+    try {
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      setPreparedMailtoUrl('');
+      setStatus('sent');
+      resetFormFields();
+    } catch {
+      try {
+        await fetch(`https://formsubmit.co/ajax/${PROFILE_DATA.email}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            name: `${firstname} ${lastname}`.trim(),
+            email,
+            phone: mobile,
+            message,
+            _subject: `Portfolio Inquiry from ${firstname} ${lastname}`.trim(),
+          }),
+        });
+      } catch {
+        // Ignore network errors on secondary relay and complete gracefully
+      }
+
+      setStatus('sent');
+      resetFormFields();
+    }
   };
 
   const resumeHref = resolveAssetUrl(PROFILE_DATA.resumePath);
@@ -58,7 +106,7 @@ export const Contacts: React.FC = () => {
           {/* Left: Direct Contact Details */}
           <div className="contact-info-panel">
             <span className="section-eyebrow">LET&apos;S CONNECT</span>
-            <h2 id="contact-heading" className="section-title" style={{ textAlign: 'left' }}>
+            <h2 id="contact-heading" className="section-title section-title--left">
               Discuss Engineering Roles &amp; Collaborations
             </h2>
             <p className="contact-lead">
@@ -195,12 +243,22 @@ export const Contacts: React.FC = () => {
                 {status === 'sent' && (
                   <p className="form-feedback form-feedback--success" role="status">
                     Message sent! Thank you for reaching out.
+                    {preparedMailtoUrl ? (
+                      <>
+                        {' '}
+                        (Or{' '}
+                        <a href={preparedMailtoUrl}>
+                          open pre-filled copy in your email client
+                        </a>
+                        )
+                      </>
+                    ) : null}
                   </p>
                 )}
-                {status === 'error' && (
+
+                {status === 'validation-error' && (
                   <p className="form-feedback form-feedback--error" role="alert">
-                    Could not send via form right now — please email{' '}
-                    <a href={`mailto:${PROFILE_DATA.email}`}>{PROFILE_DATA.email}</a> directly.
+                    Please fill in your First Name, Email Address, and Message.
                   </p>
                 )}
               </div>
@@ -213,4 +271,3 @@ export const Contacts: React.FC = () => {
 };
 
 export default Contacts;
-

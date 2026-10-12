@@ -23,11 +23,9 @@ export const Skills: React.FC = () => {
           </p>
         </div>
 
-        <div className="skills-filter-bar" role="tablist" aria-label="Filter technical skills by domain">
+        <div className="skills-filter-bar" role="group" aria-label="Filter technical skills by domain">
           <button
             type="button"
-            role="tab"
-            aria-selected={activeCategoryId === 'all'}
             className={`filter-pill-btn ${activeCategoryId === 'all' ? 'filter-pill-btn--active' : ''}`}
             onClick={() => setActiveCategoryId('all')}
           >
@@ -39,8 +37,6 @@ export const Skills: React.FC = () => {
               <button
                 key={category.id}
                 type="button"
-                role="tab"
-                aria-selected={isSelected}
                 className={`filter-pill-btn ${isSelected ? 'filter-pill-btn--active' : ''}`}
                 onClick={() => setActiveCategoryId(category.id)}
               >
@@ -81,5 +77,3 @@ export const Skills: React.FC = () => {
 };
 
 export default Skills;
-
-

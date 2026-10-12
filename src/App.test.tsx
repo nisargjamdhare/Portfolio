@@ -29,8 +29,8 @@ describe('Nisarga Jamdhare Portfolio', () => {
 
   test('supports interactive career journey stage filtering and architecture layer switching', () => {
     render(<App />);
-    const aiPillarTab = screen.getByRole('tab', { name: /Applied AI & MCP Agents/i });
-    fireEvent.click(aiPillarTab);
+    const aiPillarBtn = screen.getByRole('button', { name: /Applied AI & MCP Agents/i });
+    fireEvent.click(aiPillarBtn);
     expect(screen.getByText(/Show All 4 Stages/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/Show All 4 Stages/i));
@@ -38,5 +38,3 @@ describe('Nisarga Jamdhare Portfolio', () => {
     expect(screen.getByText(/STAGE 04/i)).toBeInTheDocument();
   });
 });
-
-
